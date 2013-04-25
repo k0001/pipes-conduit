@@ -1,25 +1,39 @@
-Name: pipes-conduit
-Version: 0.0.2
-License: BSD3
-License-file: LICENSE
-Author: Paolo Capriotti
-Maintainer: p.capriotti@gmail.com
-Stability: Experimental
-Homepage: https://github.com/pcapriotti/pipes-extra
-Category: Control, Enumerator
-Build-type: Simple
-Synopsis: Conduit adapters
-Description: Conduit adapters
-Cabal-version: >=1.8
+name:          pipes-conduit
+version:       0.0.2.1
+license:       BSD3
+license-file:  LICENSE
+copyright:     Copyright (c) Paolo Capriotti 2010-2012,
+                             Renzo Carbonara 2013
+author:        Paolo Capriotti, Renzo Carbonara
+maintainer:    renzocarbonaraλgmail.com
+stability:     Experimental
+tested-with:   GHC ==7.4.1
+homepage:      https://github.com/k0001/pipes-extra
+bug-reports:   https://github.com/k0001/pipes-extra/issues
+category:      Pipes, Conduit
+build-type:    Simple
+cabal-version: >=1.8
+synopsis:      Compatibility layer between pipes and conduit streams.
+description:
+  Compatibility layer between pipes and conduit streams.
+  .
+  The "Control.Proxy.Conduit" module exports utilities to convert
+  conduit streams to pipes streams.
+  .
+  The "Data.Conduit.Proxy" module exports utilities to convert pipes
+  streams to conduit streams.
+extra-source-files: README.md PEOPLE
 
-Source-Repository head
+source-repository head
     Type: git
-    Location: https://github.com/pcapriotti/pipes-extra
+    Location: git://github.com/k0001/pipes-conduit.git
 
-Library
-  Exposed-modules: Control.Pipe.Conduit
-  Build-depends:
-    base (== 4.*),
-    transformers (== 0.2.*),
-    pipes-core (== 0.1.*),
-    conduit (== 0.2.*)
+library
+  hs-source-dirs:     src
+  exposed-modules:    Control.Proxy.Conduit
+                      Data.Conduit.Proxy
+  build-depends:
+      base            (>=4.0 && <5.0)
+    , transformers    (>=0.2 && <0.4)
+    , pipes           (>=3.2 && <3.3)
+    , conduit         (>=1.0 && <1.1)
