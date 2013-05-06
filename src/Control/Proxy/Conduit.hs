@@ -17,9 +17,23 @@ fromProducer :: (Monad m, P.Proxy p)
              => C.Producer m b
              -> () -> P.Producer p b m ()
 fromProducer (C.ConduitM cp) () = P.runIdentityP (go cp) where
-  go (C.HaveOutput p c b) = P.respond b *> go p <* lift c -- this must be wrong
-  go (C.NeedInput _ c)    = go (c ()) -- shouldn't this situation be an error?
-  go (C.Done r)           = return r
+  go (C.HaveOutput p c b) = P.respond b *> go p <* lift c
+  -- ^ the use of 'c' must be wrong here.
+  go (C.NeedInput _ _)    = error "fromProducer: NeedInput"
+  go (C.Done ())          = return ()
   go (C.PipeM m)          = lift m >>= go
   go (C.Leftover p ())    = go p
+
+
+fromConsumer :: (Monad m, P.Proxy p)
+             => C.Consumer a m r
+             -> () -> P.Consumer p a m r
+fromConsumer (C.ConduitM cp) () = P.runIdentityP (go cp) where
+  go (C.HaveOutput _ _ _) = error "fromConsumer: HaveOutput"
+  go (C.NeedInput p c)    = P.request () >>= go . p
+  -- XXX what about 'c'?
+  go (C.Done r)           = return r
+  go (C.PipeM m)          = lift m >>= go
+  go (C.Leftover p i)     = go p
+  -- XXX what about 'i'?
 
